@@ -1,8 +1,5 @@
-import sys
-
 import numpy as np
 
-path_to_obj = "/home/user1/PycharmProjects/renderer/bench/model.obj"
 def read_from_obj(path_to_obj):
     with open(path_to_obj, "r") as f:
         lines = f.readlines()

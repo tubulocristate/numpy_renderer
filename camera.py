@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 class Camera():
     def __init__(self, camera_position, at, up, fov, z_near, z_far):
@@ -22,16 +23,18 @@ class Camera():
         R[2, :3] = camera_direction
 
         T = np.eye(4)
-        T[:3, 3] = camera_position
-        return R @ T
+
+        T[:3, -1] = -camera_position
+
+        return R@T
 
     def Camera2ScreenMatrix(self, fov, z_near, z_far):
         projection_matrix = np.zeros(shape=(4, 4))
         projection_matrix[0][0] = 1 / (np.tan(fov / 2 * np.pi / 180))
         projection_matrix[1][1] = 1 / (np.tan(fov / 2 * np.pi / 180))
-        projection_matrix[2][2] = -z_far / (z_far - z_near)
-        projection_matrix[2][3] = -1
-        projection_matrix[3][2] = -z_far * z_near / (z_far - z_near)
+        projection_matrix[2][2] = (z_far + z_near) / (z_near - z_far)
+        projection_matrix[2][3] = 2*z_far * z_near / (z_near - z_far)
+        projection_matrix[3][2] = -1
         return projection_matrix
 
     def __call__(self, points):
